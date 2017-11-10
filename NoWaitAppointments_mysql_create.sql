@@ -1,57 +1,182 @@
-CREATE TABLE `Users` (
-	`name` varchar(100) NOT NULL,
-	`id` DECIMAL(100) NOT NULL AUTO_INCREMENT,
-	`type` BINARY(1) NOT NULL DEFAULT '0',
-	`password` varchar(100) NOT NULL,
-	`address` varchar(100) NOT NULL,
-	PRIMARY KEY (`id`)
-);
+-- phpMyAdmin SQL Dump
+-- version 4.7.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Nov 10, 2017 at 06:34 AM
+-- Server version: 10.1.25-MariaDB
+-- PHP Version: 5.6.31
 
-CREATE TABLE `UserProfile` (
-	`dob` TIMESTAMP(100) NOT NULL,
-	`id` DECIMAL(100) NOT NULL,
-	`currentLat` DECIMAL(100) NOT NULL,
-	`currentLong` DECIMAL(100) NOT NULL,
-	PRIMARY KEY (`id`)
-);
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-CREATE TABLE `ServiceProfile` (
-	`categoryId` DECIMAL(10) NOT NULL,
-	`currentLat` DECIMAL(100) NOT NULL,
-	`currentLong` DECIMAL(100) NOT NULL,
-	`id` DECIMAL(100) NOT NULL,
-	`price` DECIMAL(100) NOT NULL,
-	`limit` DECIMAL(100) NOT NULL,
-	`durationStart` TIMESTAMP(100) NOT NULL,
-	`durationStop` TIMESTAMP(100) NOT NULL,
-	`rating` DECIMAL(10) NOT NULL,
-	PRIMARY KEY (`id`)
-);
 
-CREATE TABLE `Category` (
-	`categoryId` DECIMAL(10) NOT NULL AUTO_INCREMENT,
-	`name` TIMESTAMP(100) NOT NULL UNIQUE,
-	`desc` varchar(500) NOT NULL,
-	PRIMARY KEY (`categoryId`)
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE `Appointment` (
-	`aid` DECIMAL(100) NOT NULL AUTO_INCREMENT,
-	`requestId` DECIMAL(100) NOT NULL,
-	`serviceId` DECIMAL(100) NOT NULL,
-	`aTime` TIMESTAMP(100) NOT NULL,
-	`status` BOOLEAN(1) NOT NULL,
-	`closure` BOOLEAN(1) NOT NULL,
-	PRIMARY KEY (`aid`)
-);
+--
+-- Database: `NoWaitAppointment`
+--
 
-ALTER TABLE `UserProfile` ADD CONSTRAINT `UserProfile_fk0` FOREIGN KEY (`id`) REFERENCES `Users`(`id`);
+-- --------------------------------------------------------
 
-ALTER TABLE `ServiceProfile` ADD CONSTRAINT `ServiceProfile_fk0` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`categoryId`);
+--
+-- Table structure for table `appointment`
+--
 
-ALTER TABLE `ServiceProfile` ADD CONSTRAINT `ServiceProfile_fk1` FOREIGN KEY (`id`) REFERENCES `Users`(`id`);
+CREATE TABLE `appointment` (
+  `aid` int(65) NOT NULL,
+  `requestId` int(65) NOT NULL,
+  `serviceId` int(65) NOT NULL,
+  `aTime` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `status` int(1) NOT NULL,
+  `closure` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-ALTER TABLE `Appointment` ADD CONSTRAINT `Appointment_fk0` FOREIGN KEY (`requestId`) REFERENCES `Users`(`id`);
+-- --------------------------------------------------------
 
-ALTER TABLE `Appointment` ADD CONSTRAINT `Appointment_fk1` FOREIGN KEY (`serviceId`) REFERENCES `Users`(`id`);
+--
+-- Table structure for table `category`
+--
 
+CREATE TABLE `category` (
+  `categoryId` int(10) NOT NULL,
+  `name` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `desc` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `serviceprofile`
+--
+
+CREATE TABLE `serviceprofile` (
+  `categoryId` int(10) NOT NULL,
+  `currentLat` int(65) NOT NULL,
+  `currentLong` int(65) NOT NULL,
+  `uid` int(65) NOT NULL,
+  `price` int(65) NOT NULL,
+  `limit` int(65) NOT NULL,
+  `durationStart` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `durationStop` timestamp(6) NOT NULL DEFAULT '0000-00-00 00:00:00.000000',
+  `rating` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userprofile`
+--
+
+CREATE TABLE `userprofile` (
+  `dob` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `uid` int(65) NOT NULL,
+  `currentLat` int(65) NOT NULL,
+  `currentLong` int(65) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `name` varchar(65) NOT NULL,
+  `uname` varchar(65) NOT NULL,
+  `uid` int(65) NOT NULL,
+  `type` int(1) NOT NULL DEFAULT '0',
+  `password` varchar(65) NOT NULL,
+  `address` varchar(65) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `appointment`
+--
+ALTER TABLE `appointment`
+  ADD PRIMARY KEY (`aid`),
+  ADD KEY `Appointment_fk0` (`requestId`),
+  ADD KEY `Appointment_fk1` (`serviceId`);
+
+--
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`categoryId`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
+-- Indexes for table `serviceprofile`
+--
+ALTER TABLE `serviceprofile`
+  ADD PRIMARY KEY (`uid`),
+  ADD KEY `ServiceProfile_fk0` (`categoryId`);
+
+--
+-- Indexes for table `userprofile`
+--
+ALTER TABLE `userprofile`
+  ADD PRIMARY KEY (`uid`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`uid`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `appointment`
+--
+ALTER TABLE `appointment`
+  MODIFY `aid` int(65) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+  MODIFY `categoryId` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `uid` int(65) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `appointment`
+--
+ALTER TABLE `appointment`
+  ADD CONSTRAINT `Appointment_fk0` FOREIGN KEY (`requestId`) REFERENCES `users` (`uid`),
+  ADD CONSTRAINT `Appointment_fk1` FOREIGN KEY (`serviceId`) REFERENCES `users` (`uid`);
+
+--
+-- Constraints for table `serviceprofile`
+--
+ALTER TABLE `serviceprofile`
+  ADD CONSTRAINT `ServiceProfile_fk0` FOREIGN KEY (`categoryId`) REFERENCES `category` (`categoryId`),
+  ADD CONSTRAINT `ServiceProfile_fk1` FOREIGN KEY (`uid`) REFERENCES `users` (`uid`);
+
+--
+-- Constraints for table `userprofile`
+--
+ALTER TABLE `userprofile`
+  ADD CONSTRAINT `UserProfile_fk0` FOREIGN KEY (`uid`) REFERENCES `users` (`uid`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
