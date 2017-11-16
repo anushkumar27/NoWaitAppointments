@@ -45,7 +45,7 @@ CREATE TABLE `appointment` (
 
 CREATE TABLE `category` (
   `categoryId` int(10) NOT NULL,
-  `name` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `name` varchar(50) NOT NULL,
   `desc` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -57,8 +57,8 @@ CREATE TABLE `category` (
 
 CREATE TABLE `serviceprofile` (
   `categoryId` int(10) NOT NULL,
-  `currentLat` int(65) NOT NULL,
-  `currentLong` int(65) NOT NULL,
+  `currentLat` decimal(15,15) NOT NULL,
+  `currentLong` decimal(15,15) NOT NULL,
   `uid` int(65) NOT NULL,
   `price` int(65) NOT NULL,
   `limit` int(65) NOT NULL,
@@ -76,8 +76,8 @@ CREATE TABLE `serviceprofile` (
 CREATE TABLE `userprofile` (
   `dob` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `uid` int(65) NOT NULL,
-  `currentLat` int(65) NOT NULL,
-  `currentLong` int(65) NOT NULL
+  `currentLat` decimal(15,15) NOT NULL,
+  `currentLong` decimal(15,15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
