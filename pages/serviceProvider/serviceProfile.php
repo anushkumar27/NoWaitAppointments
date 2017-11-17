@@ -1,3 +1,9 @@
+<?php
+    session_start();
+    if(!$_SESSION['uid']){
+        header('Location: /NWA');
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +34,7 @@
 
 </head>
 
-<body>
+<body onload="init()">
 
     <div id="wrapper">
 
@@ -131,16 +137,13 @@
                     <ul class="nav" id="side-menu">
 
                         <li>
-                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        <a href="index.php" ><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
-                            <a href="tables.html"><i class="fa fa-calendar fa-fw"></i> My Appointments</a>
+                            <a href="approvals.php" ><i class="fa fa-calendar fa-fw"></i> Approvals</a>
                         </li>
                         <li>
-                            <a href="forms.html"><i class="fa fa-map-marker fa-fw"></i> Navigation</a>
-                        </li>
-                        <li>
-                            <a href="forms.html" class="active"><i class="fa fa-user fa-fw"></i> Profile</a>
+                            <a href="serviceProfile.php" class="active"><i class="fa fa-user fa-fw"></i> Profile</a>
                         </li>
 
                     </ul>
@@ -153,7 +156,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">User Profile</h1>
+                    <h1 class="page-header">Service Profile</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -161,9 +164,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Personal Details
-                        </div>
+                        
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -171,15 +172,27 @@
                                         
                                         <div class="form-group">
                                             <label>Name</label>
-                                            <input class="form-control" placeholder="Enter your name">
+                                            <input class="form-control" placeholder="Enter your name" id="name">
                                         </div>
                                         <div class="form-group">
-                                                <label>Date of Birth</label>
-                                                <input class="form-control" placeholder="Select you DOB" type="date"></input>
-                                            </div>
+                                            <label>Price</label>
+                                            <input class="form-control" placeholder="Enter your price" id="price">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Limit (per Day)</label>
+                                            <input class="form-control" placeholder="Enter your limit (per Day)" id="limit">
+                                        </div>
+                                        <div class="form-group">
+                                                <label>Duration Start</label>
+                                                <input class="form-control" placeholder="HH:MM:SS" id="start"></input>
+                                        </div>
+                                        <div class="form-group">
+                                                <label>Duration Stop</label>
+                                                <input class="form-control" placeholder="HH:MM:SS" id="stop"></input>
+                                        </div>
                                         <div class="form-group">
                                             <label>Address</label>
-                                            <textarea class="form-control" rows="3" placeholder="Enter your address"></textarea>
+                                            <textarea class="form-control" rows="3" id="address" placeholder="Enter your address"></textarea>
                                         </div>
 
                                         <button type="submit" class="btn btn-default">Submit Button</button>
@@ -214,6 +227,27 @@
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
 
+    <script>
+        var uid= '<?php echo $_SESSION['uid']; ?>';
+        uid = 1;
+        function init(){
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    json = JSON.parse(xhttp.responseText);
+                    //console.log(json);
+                    document.getElementById("name").value = json.name;
+                    document.getElementById("price").value = json.price;
+                    document.getElementById("address").value = json.address;
+                    document.getElementById("limit").value = json.limit;
+                    document.getElementById("start").value = json.durationStart.slice(0, 5);
+                    document.getElementById("stop").value = json.durationStop.slice(0, 5);
+                }
+            };
+            xhttp.open("GET", "getProfile?uid="+uid, false);
+            xhttp.send();
+        }
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,10 @@
+# index page
+DirectoryIndex index.php
+Options -Indexes
+
+RewriteEngine On
+
+# login validation 
+RewriteRule ^getServiceList$ ../../API/getServiceList.php [QSA,L]
+RewriteRule ^getProfile$ ../../API/getProfile.php [QSA,L] 
+RewriteRule ^getCategory$ ../../API/getCategory.php [QSA,L]

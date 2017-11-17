@@ -1,3 +1,9 @@
+<?php
+    session_start();
+    if(!$_SESSION['uid']){
+        header('Location: /NWA');
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,16 +32,11 @@
     <!-- Custom Fonts -->
     <link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+
 
 </head>
 
-<body>
+<body onload="init()">
 
     <div id="wrapper">
 
@@ -138,16 +139,13 @@
                         <ul class="nav" id="side-menu">
     
                             <li>
-                                <a href="index.html" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                                <a href="index.php" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                             </li>
                             <li>
-                                <a href="tables.html" ><i class="fa fa-calendar fa-fw"></i> My Appointments</a>
+                                <a href="approvals.php" ><i class="fa fa-calendar fa-fw"></i> Approvals</a>
                             </li>
                             <li>
-                                <a href="forms.html" ><i class="fa fa-map-marker fa-fw"></i> Navigation</a>
-                            </li>
-                            <li>
-                                <a href="forms.html" ><i class="fa fa-user fa-fw"></i> Profile</a>
+                                <a href="serviceProfile.php" ><i class="fa fa-user fa-fw"></i> Profile</a>
                             </li>
     
                         </ul>
@@ -161,31 +159,8 @@
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-12" id="myServices">
-                        <h1 class="page-header">Services</h1>
-                        <!-- /.col-lg-4 -->
-                        <div class="col-lg-4">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <h5>Service A (Category)</h5>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="col-md-8" id="myServices">
-                                        <b>Address:</b><p> Bangalore</p>
-                                        <br>
-                                        <b>Description: </b><p>I am a plumber</p>
-                                    </div>
-                                    <div class="col-md-4" id="myServices">
-                                        <b>Price:</b> <p> Rs.350</p>
-                                        <br>
-                                        <button type="button" class="btn btn-info">Navigate</button>
-                                    </div>
-                                </div>
-                                <div class="panel-footer">
-                                    <button type="button" class="btn btn-success" style="margin-left:15px;">Schedule Appointment</button>             
-                                </div>
-                            </div>
-                        </div>
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Dashboard</h1>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -209,7 +184,6 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
-
 </body>
 
 </html>
