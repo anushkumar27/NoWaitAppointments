@@ -33,6 +33,20 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <style>
+        #map {
+            height: 500px;
+            width: 1000px;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+
+
 </head>
 
 <body>
@@ -163,6 +177,12 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Navigation</h1>
+                        <select id="appointments" name="appointments"></select>
+
+
+                        <div id="map">
+
+                        </div>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -186,7 +206,65 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
+    <!--Maps for Navigation-->
+    <script>
 
+
+        function directionMap(originlat, originlng, destinationlat, destinationlng) {
+            var origin= {lat: originlat, lng:originlng};
+            var destination= {lat:destinationlat, lng:destinationlng};
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: origin,
+                zoom: 7
+            });
+
+            var directionsDisplay = new google.maps.DirectionsRenderer({
+                map: map
+            });
+
+            // Set destination, origin and travel mode.
+            var request = {
+                destination: destination,
+                origin: origin,
+                travelMode: 'DRIVING'
+            };
+
+            // Pass the directions request to the directions service.
+            var directionsService = new google.maps.DirectionsService();
+            directionsService.route(request, function(response, status) {
+                if (status == 'OK') {
+                    // Display the route on the map.
+                    directionsDisplay.setDirections(response);
+                }
+            });
+        }
+
+//        function addAppointments(){
+//            var select = document.getElementById("appointments");
+//            Request appointments here and store in an array
+//            parse through the array list
+//            var option = document.createElement('option');
+//            option.text= arrayname[];
+//            option.value= lat long to directionMap;
+//            select.add(option,0);
+//        }
+
+        window.onload= function(){
+            directionMap(12.5526,77.336,12.54,77.32);
+
+            var select = document.getElementById("appointments");
+            for(var i = 5; i >= 1; --i) {
+                var option = document.createElement('option');
+                option.text = option.value = i;
+                select.add(option, 0);
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiF4cNZ9TlPSPoylkeeZRZ_9fGEHAIBwE&callback=directionMap"
+            async defer>
+
+    </script>
 </body>
 
 </html>
