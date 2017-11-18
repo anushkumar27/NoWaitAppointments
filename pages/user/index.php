@@ -140,10 +140,10 @@
                         <ul class="nav" id="side-menu">
     
                             <li>
-                                <a href="index.html" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                                <a href="index.php" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                             </li>
                             <li>
-                                <a href="tables.html" ><i class="fa fa-calendar fa-fw"></i> My Appointments</a>
+                                <a href="tables.php" ><i class="fa fa-calendar fa-fw"></i> My Appointments</a>
                             </li>
                             <li>
                                 <a href="forms.html" ><i class="fa fa-map-marker fa-fw"></i> Navigation</a>
