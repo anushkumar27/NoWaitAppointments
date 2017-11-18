@@ -181,7 +181,7 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="dtp_input1" class="col-md-2 control-label">Select Date&Time</label>
-                                        <div class="input-group date form_datetime col-md-5" data-date="2017-11-16T00:00:00Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                        <div class="input-group date form_datetime col-md-5" data-date="" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
                                             <input class="form-control" size="16" type="text" value="" readonly id="choosenDate">
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
                                             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
@@ -263,7 +263,10 @@
             forceParse: 0,
             showMeridian: 1
         });
-
+        var d = new Date();
+        var todayDate = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+        //console.log(todayDate);
+        $('.form_datetime').datetimepicker('setStartDate', todayDate);
         function init(){
 
             var xhttp = new XMLHttpRequest();
