@@ -1,3 +1,9 @@
+<?php
+    session_start();
+    if(!$_SESSION['uid']){
+        header('Location: /NWA');
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -177,8 +183,13 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">Navigation</h1>
-                        <select id="appointments" name="appointments"></select>
-                        <div id="time"></div>
+                        <div class="form-group">
+                            <label>Select a service</label>
+                            <select class="form-control" id="serviceDropdown" onchange="serviceChange(this)">
+                                <option></option>
+                            </select>
+                        </div>
+                        <h4> ETA to Service Provider: <b id="time">-</b></h4>
 
                         <div id="map">
 
@@ -208,15 +219,91 @@
     <script src="../../dist/js/sb-admin-2.js"></script>
     <!--Maps for Navigation-->
     <script>
+        var uid= '<?php echo $_SESSION['uid']; ?>';
+        
+
+        var xhttp2 = new XMLHttpRequest();
+        xhttp2.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                res = JSON.parse(xhttp2.responseText);
+                //console.log(res);
+                var select = document.getElementById("serviceDropdown");
+                for(var i = 0; i < res.services.length; i++) {
+                    var option = document.createElement('option');
+                    option.text = res.services[i].name;
+                    option.value = res.services[i].uid;
+                    select.add(option);
+                }
+            }
+        };
+        xhttp2.open("GET", "getServiceList", false);
+        xhttp2.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp2.send();
+
+        function mapInit(){
+            var xhttp1 = new XMLHttpRequest();
+            xhttp1.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    userProfile = JSON.parse(xhttp1.responseText);
+                }
+            };
+            xhttp1.open("GET", "getProfile?uid="+uid, false);
+            xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp1.send();
+            var origin= new google.maps.LatLng(parseFloat(userProfile.currentLat), parseFloat(userProfile.currentLong))
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: origin,
+                zoom: 11
+            });
+
+            var contentString = "<p>User's current location<p><p>Name:<b>"+userProfile.name+"</b></p>";
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            var userLoc= new google.maps.Marker({
+                position: origin,
+                map: map
+            });
+
+            userLoc.addListener('mouseover', function() {
+             infowindow.open(map, userLoc);
+            });
+        }
+
+        
+        function serviceChange(ev) {
+            if(ev.value.length > 0){
+                var xhttp1 = new XMLHttpRequest();
+                xhttp1.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        serviceLoc = JSON.parse(xhttp1.responseText);
+                        //console.log(serviceLoc);
+                    }
+                };
+                xhttp1.open("GET", "getProfile?uid="+ev.value, false);
+                xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp1.send();
+                
+                directionMap(userProfile.currentLat, userProfile.currentLong, serviceLoc.currentLat, serviceLoc.currentLong);
+                distanceMap(userProfile.currentLat, userProfile.currentLong, serviceLoc.currentLat, serviceLoc.currentLong);
+            
+            }else{
+                mapInit();  
+                var time = document.getElementById("time");
+                time.innerHTML= "-";
+            }
+        }
+
 
 
         function directionMap(originlat, originlng, destinationlat, destinationlng) {
-            var origin= {lat: originlat, lng:originlng};
-            var destination= {lat:destinationlat, lng:destinationlng};
+            var origin= new google.maps.LatLng(parseFloat(originlat), parseFloat(originlng));
+            var destination= new google.maps.LatLng(parseFloat(destinationlat), parseFloat(destinationlng));
 
             var map = new google.maps.Map(document.getElementById('map'), {
                 center: origin,
-                zoom: 7
+                zoom: 10
             });
 
             var directionsDisplay = new google.maps.DirectionsRenderer({
@@ -254,7 +341,6 @@
         }
 
         function callback(response, status) {
-//        div1 =  document.getElementById("map");
             if (status == 'OK') {
                 var origins = response.originAddresses;
                 var destinations = response.destinationAddresses;
@@ -267,8 +353,6 @@
                         var duration = element.duration.text;
                         var from = origins[i];
                         var to = destinations[j];
-//                    div1.innerHTML = duration;
-//                        alert(duration);
                         var time = document.getElementById("time");
                         time.innerHTML=duration;
                     }
@@ -286,18 +370,13 @@
 //        }
 
         window.onload= function(){
-            directionMap(12.5526,77.336,12.54,77.32);
-            distanceMap(12.5526,77.336,12.54,77.32)
+            //directionMap(12.5526,77.336,12.54,77.32);
+            //distanceMap(12.5526,77.336,12.54,77.32)
 
-            var select = document.getElementById("appointments");
-            for(var i = 5; i >= 1; --i) {
-                var option = document.createElement('option');
-                option.text = option.value = i;
-                select.add(option, 0);
-            }
+            
         }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiF4cNZ9TlPSPoylkeeZRZ_9fGEHAIBwE&callback=directionMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiF4cNZ9TlPSPoylkeeZRZ_9fGEHAIBwE&callback=mapInit"
             async defer>
 
     </script>
