@@ -8,3 +8,5 @@ RewriteEngine On
 RewriteRule ^getServiceList$ ../../API/getServiceList.php [QSA,L]
 RewriteRule ^getProfile$ ../../API/getProfile.php [QSA,L] 
 RewriteRule ^getCategory$ ../../API/getCategory.php [QSA,L]
+RewriteRule ^getCurrLimit$ ../../API/getCurrLimit.php [QSA,L]
+RewriteRule ^scheduleAppointment$ ../../API/scheduleAppointment.php [QSA,L]

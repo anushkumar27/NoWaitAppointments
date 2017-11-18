@@ -1,16 +1,9 @@
 <?php
-    
-    
-    // TODO check for timestamp format from Client JS
-    // TODO insert dateTime stamp into the DB
-
-
     // here we assume that limit is verified for the day
     require 'Medoo/init.php';
     // userId, serviceId, appointmentTime
-    //      check for time
     
-    // uid, suid, appTime
+    // uid, suid, appTime, appDateTime
     extract($_POST);
 
     // checking if time is fine
@@ -21,6 +14,7 @@
         "uid" => $suid
     ]);
 
+    $dateTime = $appTime;
     // converting to PHP date objects
     $startTime = new DateTime($serviceTiming[0]["durationStart"]);
     $stopTime = new DateTime($serviceTiming[0]["durationStop"]);
@@ -34,7 +28,7 @@
         $database->insert("appointment", [
             "requestId" => $uid,
             "serviceId" => $suid,
-            "appTime" => $appTime
+            "appTime" => $dateTime
         ]);
         $res["status"] = "OK";
     }else{

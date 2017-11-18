@@ -32,12 +32,8 @@
     <!-- Custom Fonts -->
     <link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <!-- Date picker -->
+    <link href="../../vendor/datepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
 
 </head>
 
@@ -169,6 +165,42 @@
                 <div class="row">
                     <div class="col-lg-12" id="myServices">
                         <h1 class="page-header">Services</h1>
+                        <!-- Button trigger modal -->
+                        <!-- <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#schedule">
+                        Launch Demo Modal
+                    </button> -->
+                    <span id="currId" style="display: none"/>
+                    <!-- Modal -->
+                    <div class="modal fade" id="schedule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">Schedule Appointment</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="dtp_input1" class="col-md-2 control-label">Select Date&Time</label>
+                                        <div class="input-group date form_datetime col-md-5" data-date="2017-11-16T00:00:00Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
+                                            <input class="form-control" size="16" type="text" value="" readonly id="choosenDate">
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                        </div>
+                                        <input type="hidden" id="dtp_input1" value="" /><br/>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-success" onClick="checkAvailability()">Check Availability</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+                        <br>
+
                         <!-- /.col-lg-4
                         <div class="col-lg-4">
                             <div class="panel panel-primary">
@@ -216,8 +248,22 @@
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
 
+    <!-- Datepicker JavaScript -->
+    <script src="../../vendor/datepicker/js/bootstrap-datetimepicker.js"></script>
+    
+    
     <script>
-        
+        $('.form_datetime').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 1
+        });
+
         function init(){
 
             var xhttp = new XMLHttpRequest();
@@ -229,7 +275,6 @@
             };
             xhttp.open("GET", "getServiceList", false);
             xhttp.send();
-
             for(i = 0; i <= services.length; i++){
 
                 var xhttp = new XMLHttpRequest();
@@ -251,7 +296,8 @@
                 xhttp.open("GET", "getCategory?catId="+profile.categoryId, false);
                 xhttp.send();
 
-                createTile( profile.name, 
+                createTile( services[i].uid,
+                            profile.name, 
                             category.name, 
                             profile.rating, 
                             profile.address, 
@@ -263,7 +309,7 @@
             }
         }
 
-        function createTile(pName, cName, rating, address, price, description, start , end){
+        function createTile(uid, pName, cName, rating, address, price, description, start , end){
             // <!-- /.col-lg-4 -->
             // <div class="col-lg-4"> div1
             //     <div class="panel panel-primary"> div2
@@ -356,6 +402,13 @@
             var button1 = document.createElement("button");
             button1.className = "btn btn-success";
             button1.style = "margin-left:5px;";
+            button1.id = uid;
+            button1.onclick = function(){
+                $('#schedule').modal('toggle');
+                var a = $(this).attr('id');
+                // storing suid in the hidden span
+                document.getElementById("currId").innerHTML = a;
+            }
             button1.innerHTML = "Schedule Appointment";
             div7.appendChild(button1);
 
@@ -368,6 +421,47 @@
             div2.appendChild(div7);
             document.getElementById("myServices").appendChild(div1);
         }
+
+        function checkAvailability(){
+            var uid= '<?php echo $_SESSION['uid']; ?>';
+            var suid = document.getElementById("currId").innerHTML;
+            var myDateTime = document.getElementById("choosenDate").value;
+            //console.log(myDateTime);
+            if(myDateTime.length > 0){
+                var myDate = myDateTime.slice(0,10)
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        json = JSON.parse(xhttp.responseText);
+                        var limit = json.currLimit;
+                        if(limit == 0){
+                            alert("Date not available, Try again with a different date");
+                        }else{
+                            var xhttp1 = new XMLHttpRequest();
+                            xhttp1.onreadystatechange = function() {
+                                if (this.readyState == 4 && this.status == 200) {
+                                    var res = JSON.parse(xhttp1.responseText);
+                                    if(res.status == "ERROR"){
+                                        alert(res.message);
+                                    }else{
+                                        alert("Success");
+                                    }
+                                }
+                            };
+                            xhttp1.open("POST", "scheduleAppointment", false);
+                            xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                            xhttp1.send("suid="+suid+"&appTime="+myDateTime+"&uid="+uid);
+                        }
+                    }
+                };
+                xhttp.open("POST", "getCurrLimit", false);
+                xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhttp.send("suid="+suid+"&aDate="+myDate);
+            }else{
+                alert("Error, please choose a date and time");
+            }
+        }
+
     </script>
 
 </body>

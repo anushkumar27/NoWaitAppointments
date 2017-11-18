@@ -229,7 +229,6 @@
 
     <script>
         var uid= '<?php echo $_SESSION['uid']; ?>';
-        uid = 1;
         function init(){
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
