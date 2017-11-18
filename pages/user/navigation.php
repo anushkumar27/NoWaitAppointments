@@ -178,7 +178,7 @@
                     <div class="col-lg-12">
                         <h1 class="page-header">Navigation</h1>
                         <select id="appointments" name="appointments"></select>
-
+                        <div id="time"></div>
 
                         <div id="map">
 
@@ -240,6 +240,41 @@
             });
         }
 
+        function distanceMap(originlat, originlng, destinationlat, destinationlng) {
+            var origin1 = new google.maps.LatLng(originlat, originlng);
+            var destinationA = new google.maps.LatLng(destinationlat, destinationlng);
+
+            var service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix(
+                {
+                    origins: [origin1],
+                    destinations: [destinationA],
+                    travelMode: 'DRIVING',
+                }, callback);
+        }
+
+        function callback(response, status) {
+//        div1 =  document.getElementById("map");
+            if (status == 'OK') {
+                var origins = response.originAddresses;
+                var destinations = response.destinationAddresses;
+
+                for (var i = 0; i < origins.length; i++) {
+                    var results = response.rows[i].elements;
+                    for (var j = 0; j < results.length; j++) {
+                        var element = results[j];
+                        var distance = element.distance.text;
+                        var duration = element.duration.text;
+                        var from = origins[i];
+                        var to = destinations[j];
+//                    div1.innerHTML = duration;
+//                        alert(duration);
+                        var time = document.getElementById("time");
+                        time.innerHTML=duration;
+                    }
+                }
+            }
+        }
 //        function addAppointments(){
 //            var select = document.getElementById("appointments");
 //            Request appointments here and store in an array
@@ -252,6 +287,7 @@
 
         window.onload= function(){
             directionMap(12.5526,77.336,12.54,77.32);
+            distanceMap(12.5526,77.336,12.54,77.32)
 
             var select = document.getElementById("appointments");
             for(var i = 5; i >= 1; --i) {
