@@ -262,6 +262,9 @@
             var button2 = document.createElement("button");
             button2.className = "btn btn-info btn-block";
             button2.innerHTML = "Navigate";
+            button2.onclick = function(){
+                window.location = "/NWA/pages/user/navigation.php";
+            }
             div7.appendChild(button2);
 
             div1.appendChild(div2);

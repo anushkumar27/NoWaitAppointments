@@ -164,116 +164,8 @@
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">My Appointments</h1>
-                        <div class="panel panel-danger">
-                            <div class="panel-heading">
-                                Appointment 1 <b>(AID: 1XXX1)</b>
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#home" data-toggle="tab">Home</a>
-                                    </li>
-                                    <li><a href="#timing" data-toggle="tab">Timing</a>
-                                    </li>
-                                    <li><a href="#navigation" data-toggle="tab">Navigation</a>
-                                    </li>
-                                </ul>
-    
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="home">
-                                        <h3>Service Name</h3>
-                                        <p> Address: <br>234, 1st Cross, BSK 3rd Stage, Bangalore - 5667007</p>
-                                    </div>
-                                    <div class="tab-pane fade" id="timing">
-                                        <h4><b>Open:</b> 3:00 PM</h4>
-                                        <h4> <b>Close:</b> 6:00 PM</h4>
-                                    </div>
-                                    <div class="tab-pane fade" id="navigation">
-                                        <h4><b>ETA:</b> 4 mins</h4>
-                                        <h4> <b>Traffic:</b> Heavy</h4>
-                                        <h4><b>Weather:</b> 24 C, Cloudy</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-                        <!-- /.panel -->
-                        <div class="panel panel-danger">
-                            <div class="panel-heading">
-                                Appointment 1 <b>(AID: 1XXX1)</b>
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#home" data-toggle="tab">Home</a>
-                                    </li>
-                                    <li><a href="#timing" data-toggle="tab">Timing</a>
-                                    </li>
-                                    <li><a href="#navigation" data-toggle="tab">Navigation</a>
-                                    </li>
-                                </ul>
-    
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="home">
-                                        <h3>Service Name</h3>
-                                        <p> Address: <br>234, 1st Cross, BSK 3rd Stage, Bangalore - 5667007</p>
-                                    </div>
-                                    <div class="tab-pane fade" id="timing">
-                                        <h4><b>Open:</b> 3:00 PM</h4>
-                                        <h4> <b>Close:</b> 6:00 PM</h4>
-                                    </div>
-                                    <div class="tab-pane fade" id="navigation">
-                                        <h4><b>ETA:</b> 4 mins</h4>
-                                        <h4> <b>Traffic:</b> Heavy</h4>
-                                        <h4><b>Weather:</b> 24 C, Cloudy</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-                        <!-- /.panel -->
-                        <div class="panel panel-danger">
-                            <div class="panel-heading">
-                                Appointment 1 <b>(AID: 1XXX1)</b>
-                            </div>
-                            <!-- /.panel-heading -->
-                            <div class="panel-body">
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#home" data-toggle="tab">Home</a>
-                                    </li>
-                                    <li><a href="#timing" data-toggle="tab">Timing</a>
-                                    </li>
-                                    <li><a href="#navigation" data-toggle="tab">Navigation</a>
-                                    </li>
-                                </ul>
-    
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="home">
-                                        <h3>Service Name</h3>
-                                        <p> Address: <br>234, 1st Cross, BSK 3rd Stage, Bangalore - 5667007</p>
-                                    </div>
-                                    <div class="tab-pane fade" id="timing">
-                                        <h4><b>Open:</b> 3:00 PM</h4>
-                                        <h4> <b>Close:</b> 6:00 PM</h4>
-                                    </div>
-                                    <div class="tab-pane fade" id="navigation">
-                                        <h4><b>ETA:</b> 4 mins</h4>
-                                        <h4> <b>Traffic:</b> Heavy</h4>
-                                        <h4><b>Weather:</b> 24 C, Cloudy</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.panel-body -->
-                        </div>
-                        <!-- /.panel -->
+                    <div class="col-lg-12" id="myApprovals">
+                        <h1 class="page-header">My Appointments</h1>                        
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -297,7 +189,165 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
+    
+    <script>
+        var suid= '<?php echo $_SESSION['uid']; ?>';
+        var xhttp1 = new XMLHttpRequest();
+        xhttp1.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                res = JSON.parse(xhttp1.responseText);
+                //console.log(res);
+            }
+        };
+        xhttp1.open("GET", "approvalList?suid="+suid, false);
+        xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp1.send();
 
+        for(i = 0; i < res.approval.length; i++){
+            var xhttp1 = new XMLHttpRequest();
+            xhttp1.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    userProfile = JSON.parse(xhttp1.responseText);
+                    //console.log(userProfile);
+                }
+            };
+            xhttp1.open("GET", "getProfile?uid="+res.approval[i].requestId, false);
+            xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp1.send();
+
+            createTile(
+                userProfile.name,
+                res.approval[i].aid,
+                res.approval[i].appTime,
+                userProfile.dob,
+                res.approval[i].requestId
+                );
+
+        }
+
+        
+        function createTile(name, aid, appTime, dob, requestId){
+            // <div class="col-lg-12">
+            //     <div class="panel panel-danger">
+            //         <div class="panel-heading">
+            //             <h5>Ragaav (AID: 1)</h5>
+            //         </div>
+            //         <div class="panel-body">
+            //             <div class="col-md-6">
+            //                 <b>Time</b> <p>19:00</p>
+            //             </div>
+            //             <div class="col-md-offset-3 col-md-3">
+            //                 <button type="button" class="btn btn-info btn-danger">Remove</button>  
+            //                 <button type="button" class="btn btn-info btn-success ">Approve</button>  
+            //             </div>
+            //         </div>
+            //     </div>
+            // </div>
+
+            var div1 = document.createElement('div');
+            div1.className = "col-lg-12";
+
+            var div2 = document.createElement("div");
+            div2.className = "panel panel-info";
+            
+
+            var div3 = document.createElement("div");
+            div3.className = "panel-heading";
+            var h5 = document.createElement("h5");
+            h5.innerHTML = name+" (AID: "+aid+")";
+
+            var div4 = document.createElement("div");
+            div4.className = "panel-body";
+                var div5 = document.createElement("div");
+                div5.className = "col-md-3";
+                var b1 = document.createElement("b");
+                b1.innerHTML = "Time:";
+                var p1 = document.createElement("p");
+                p1.innerHTML = appTime.slice(0,16);;
+
+                div5.appendChild(b1);
+                div5.appendChild(p1);
+
+                var div7 = document.createElement("div");
+                div7.className = "col-md-3";
+                var b7 = document.createElement("b");
+                b7.innerHTML = "DOB:";
+                var p7 = document.createElement("p");
+                p7.innerHTML = dob;
+
+                div7.appendChild(b7);
+                div7.appendChild(p7);
+
+
+                var div6 = document.createElement("div");
+                div6.className = "col-md-offset-3 col-md-3";
+                var button1 = document.createElement("button");
+                button1.className = "btn btn-info btn-danger";
+                button1.id = aid;
+                button1.innerHTML = "Remove";
+                button1.onclick = function(){
+                    removeApp(this.id);
+                }
+
+                var button2 = document.createElement("button");
+                button2.className = "btn btn-success";
+                button2.innerHTML = "Approve";
+                button2.id = aid;
+                button2.onclick = function(){
+                    approveApp(this.id);
+                }
+                button2.style = "margin-left: 10px";
+                div6.appendChild(button1);
+                div6.appendChild(button2);
+
+
+            div1.appendChild(div2);
+            div2.appendChild(div3);
+            div3.appendChild(h5)
+            div2.appendChild(div4);
+            div4.appendChild(div5);
+            div4.appendChild(div7);
+            div4.appendChild(div6);
+
+            document.getElementById("myApprovals").appendChild(div1);
+        }
+
+        function removeApp(aid){
+            var xhttp1 = new XMLHttpRequest();
+            xhttp1.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    //console.log(xhttp1.responseText);
+                    res = JSON.parse(xhttp1.responseText);
+                    if(res.status == "ERROR"){
+                        alert("Error occured, refresh and try again");
+                    }else{
+                        alert("Removal Success");
+                    }
+                }
+            };
+            xhttp1.open("POST", "removeApp", false);
+            xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp1.send("aid="+aid);
+        }
+
+        function approveApp(aid){
+            var xhttp1 = new XMLHttpRequest();
+            xhttp1.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    res = JSON.parse(xhttp1.responseText);
+                    //console.log(res);
+                    if(res.status == "ERROR"){
+                        alert("Error occured, refresh and try again");
+                    }else{
+                        alert("Approval Success");
+                    }
+                }
+            };
+            xhttp1.open("POST", "approveApp", false);
+            xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp1.send("aid="+aid);
+        }
+    </script>
 </body>
 
 </html>
