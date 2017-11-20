@@ -12,3 +12,5 @@ RewriteRule ^getCategory$ ../../API/getCategory.php [QSA,L]
 RewriteRule ^approvalList$ ../../API/getApprovalAppointments.php [QSA,L]
 RewriteRule ^removeApp$ ../../API/removeAppointment.php [QSA,L]
 RewriteRule ^approveApp$ ../../API/approveAppointment.php [QSA,L]
+
+RewriteRule ^serviceDashboard$ ../../API/serviceDashboard.php [QSA,L]

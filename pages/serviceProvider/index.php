@@ -32,11 +32,13 @@
     <!-- Custom Fonts -->
     <link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <!-- calender -->
+    <link href="../../vendor/calender/css/jquery.e-calendar.css" rel="stylesheet" type="text/css"/>
 
 
 </head>
 
-<body onload="init()">
+<body>
 
     <div id="wrapper">
 
@@ -159,12 +161,48 @@
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Dashboard</h1>
+                    <h1 class="page-header">Dashboard</h1>
+
+                    <div class="col-md-offset-2 col-md-4" >
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-calendar fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge" id="todayApp">-</div>
+                                        <div>Today's Appointments</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" >
+                        <div class="panel panel-red">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-calendar fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge" id="pending">-</div>
+                                        <div>Pending Approvals</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
+
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-10">
+                            <div id="calendar"></div>
+                    </div>
+                </div>
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -184,6 +222,55 @@
 
     <!-- Custom Theme JavaScript -->
     <script src="../../dist/js/sb-admin-2.js"></script>
+
+    <!-- calender -->
+    <script type="text/javascript" src="../../vendor/calender/js/jquery.e-calendar.js"></script>
+
+    <script>
+        var suid= '<?php echo $_SESSION['uid']; ?>';
+        var todaysDate = new Date();
+        var mon = todaysDate.getMonth()+1;
+        var year = todaysDate.getFullYear();
+        var day = todaysDate.getDate();
+        var todayString = ""+year+"-"+mon+"-"+day;
+        
+        // myEvents
+        var myEvents = [];
+        var xhttp1 = new XMLHttpRequest();
+        xhttp1.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var res = JSON.parse(xhttp1.responseText);
+                console.log(res);
+                for(i = 0; i < res.calender.length; i++){
+                    myEvents.push({
+                        title: res.calender[i].name,
+                        description: "Appointment Id: "+res.calender[i].aid,
+                        datetime: new Date( res.calender[i].appTime.slice(0,4),
+                                            res.calender[i].appTime.slice(5,7)-1 ,
+                                            res.calender[i].appTime.slice(8,10),
+                                            res.calender[i].appTime.slice(11, 13),
+                                            res.calender[i].appTime.slice(14, 16))
+                    });
+                }
+                document.getElementById("todayApp").innerHTML = res.appCount;
+                document.getElementById("pending").innerHTML = res.pendingApproval;
+            }
+        };
+        xhttp1.open("GET", "serviceDashboard?suid="+suid+"&aDate="+todayString, false);
+        xhttp1.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp1.send();
+        
+        
+        $(document).ready(function () {
+
+            //With links on the description
+            $('#calendar').eCalendar({
+                events: myEvents
+            });
+        });
+
+
+    </script>
 </body>
 
 </html>
