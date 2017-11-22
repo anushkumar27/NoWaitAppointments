@@ -37,7 +37,7 @@
     ]);
     
     
-    $allApp = $database->query("SELECT aid, appTime, name from appointment, users WHERE serviceId=1 AND users.uid=requestId")->fetchAll();
+    $allApp = $database->query("SELECT aid, appTime, name from appointment, users WHERE serviceId=".$suid." AND users.uid=requestId")->fetchAll();
         
     //print_r($allApp);
     $res["appCount"] = $appCount;
